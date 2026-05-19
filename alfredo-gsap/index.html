@@ -705,6 +705,12 @@ gsap.utils.toArray('.contact-item').forEach((item,i) => {
 gsap.to('.map-wrap',{opacity:1,scale:1,duration:0.8,ease:'power2.out',
   scrollTrigger:{trigger:'.map-wrap',start:'top 85%'}});
 
+// ── GALLERY IMAGES ──
+gsap.utils.toArray(".gallery-img").forEach((img,i) => {
+  gsap.to(img,{opacity:1,y:0,duration:0.8,delay:i*0.15,ease:"power3.out",
+    scrollTrigger:{trigger:img,start:"top 85%"}});
+});
+
 } // end GSAP check
 
 // ── TODAY HIGHLIGHT (no GSAP needed) ──
