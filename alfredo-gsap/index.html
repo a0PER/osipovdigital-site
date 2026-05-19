@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Alfredo's Tire Shop - GSAP + Lottie Showcase</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+
+<!-- Animation libraries -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:auto}
+body{background:#06060f;color:#fff;font-family:'Space Grotesk',sans-serif;overflow-x:hidden}
+
+::-webkit-scrollbar{width:6px}
+::-webkit-scrollbar-track{background:#06060f}
+::-webkit-scrollbar-thumb{background:linear-gradient(180deg,#6366f1,#ec4899);border-radius:3px}
+
+@keyframes tireSpin{0%{transform:rotate(0)}100%{transform:rotate(360deg)}}
+@keyframes dropBounce{0%,100%{transform:translateY(0)}50%{transform:translateY(5px)}}
+@keyframes wrenchSwing{0%,100%{transform:rotate(0)}25%{transform:rotate(15deg)}75%{transform:rotate(-15deg)}}
+@keyframes carIdle{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
+
+/* ── PROGRESS BAR (top of page) ── */
+.progress-bar{
+  position:fixed;top:0;left:0;height:3px;z-index:10000;
+  background:linear-gradient(90deg,#6366f1,#ec4899,#0ea5e9);
+  transform-origin:left;transform:scaleX(0);
+}
+
+/* ── NAVBAR ── */
+.navbar{
+  position:fixed;top:3px;left:0;right:0;z-index:999;
+  padding:16px 32px;display:flex;align-items:center;justify-content:space-between;
+  background:rgba(6,6,15,0);backdrop-filter:blur(0px);transition:all 0.4s;
+}
+.navbar.scrolled{background:rgba(6,6,15,0.9);backdrop-filter:blur(16px);padding:12px 32px}
+.nav-brand{font-family:'Archivo Black',sans-serif;font-size:18px;letter-spacing:1px}
+.nav-brand span{background:linear-gradient(135deg,#6366f1,#ec4899);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.nav-links{display:flex;gap:24px;list-style:none}
+.nav-links a{color:rgba(255,255,255,0.5);text-decoration:none;font-size:14px;font-weight:500;transition:color 0.3s}
+.nav-links a:hover{color:#fff}
+.nav-cta{background:linear-gradient(135deg,#6366f1,#ec4899);color:#fff;padding:8px 20px;border-radius:8px;text-decoration:none;font-size:13px;font-weight:600}
+
+/* ── HERO ── */
+.hero{
+  min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  position:relative;overflow:hidden;padding:40px 24px;
+}
+.hero-bg{
+  position:absolute;inset:0;
+  background:
+    radial-gradient(ellipse 80% 60% at 30% 40%, rgba(99,102,241,0.12) 0%, transparent 70%),
+    radial-gradient(ellipse 60% 50% at 70% 60%, rgba(236,72,153,0.08) 0%, transparent 70%);
+}
+.hero-grid{
+  position:absolute;inset:0;
+  background-image:
+    linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px);
+  background-size:50px 50px;
+}
+.hero-content{position:relative;z-index:2;text-align:center}
+.hero-badge{
+  display:inline-flex;align-items:center;gap:8px;
+  background:rgba(99,102,241,0.1);border:1px solid rgba(99,102,241,0.25);
+  padding:8px 20px;border-radius:30px;font-size:13px;font-weight:500;color:#a78bfa;
+  margin-bottom:24px;
+}
+.hero-badge .live-dot{width:8px;height:8px;background:#22c55e;border-radius:50%;animation:dotPulse 2s ease infinite}
+@keyframes dotPulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.5;transform:scale(1.4)}}
+
+.hero h1{font-family:'Archivo Black',sans-serif;font-size:clamp(52px,12vw,130px);line-height:0.9;letter-spacing:-2px}
+.hero h1 .line1{display:block;background:linear-gradient(135deg,#fff 0%,rgba(255,255,255,0.7) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hero h1 .line2{
+  display:block;background:linear-gradient(135deg,#6366f1,#ec4899,#0ea5e9);background-size:200% 200%;
+  animation:gradShift 4s ease infinite;-webkit-background-clip:text;-webkit-text-fill-color:transparent;
+}
+@keyframes gradShift{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+
+.hero-sub{font-size:18px;color:rgba(255,255,255,0.5);margin-top:20px;font-weight:300;max-width:500px;margin-left:auto;margin-right:auto;line-height:1.6}
+.hero-stats{display:flex;gap:48px;margin-top:40px}
+.hero-stat .num{font-family:'Archivo Black',sans-serif;font-size:40px;color:#fff}
+.hero-stat .label{font-size:12px;color:rgba(255,255,255,0.4);text-transform:uppercase;letter-spacing:2px;margin-top:2px}
+.hero-cta{display:flex;gap:16px;margin-top:48px;flex-wrap:wrap;justify-content:center}
+.btn-glow{
+  display:inline-flex;align-items:center;gap:10px;
+  background:linear-gradient(135deg,#6366f1,#ec4899);color:#fff;
+  padding:16px 40px;border-radius:12px;font-size:16px;font-weight:600;
+  text-decoration:none;position:relative;overflow:hidden;transition:all 0.3s;
+}
+.btn-glow::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(255,255,255,0.2),transparent);transform:translateX(-100%);transition:transform 0.5s}
+.btn-glow:hover::before{transform:translateX(100%)}
+.btn-glow:hover{transform:translateY(-3px);box-shadow:0 8px 40px rgba(99,102,241,0.4)}
+.btn-outline{
+  display:inline-flex;align-items:center;gap:10px;background:transparent;color:#fff;
+  padding:16px 40px;border:1.5px solid rgba(255,255,255,0.15);border-radius:12px;
+  font-size:16px;font-weight:600;text-decoration:none;transition:all 0.3s;
+}
+.btn-outline:hover{border-color:#6366f1;transform:translateY(-3px)}
+
+.scroll-indicator{position:absolute;bottom:40px;left:50%;transform:translateX(-50%);z-index:2;display:flex;flex-direction:column;align-items:center;gap:8px;opacity:0}
+.scroll-indicator span{font-size:11px;color:rgba(255,255,255,0.3);text-transform:uppercase;letter-spacing:3px}
+.scroll-mouse{width:24px;height:38px;border:2px solid rgba(255,255,255,0.2);border-radius:12px;position:relative}
+.scroll-mouse::after{content:'';position:absolute;top:6px;left:50%;transform:translateX(-50%);width:4px;height:8px;background:rgba(255,255,255,0.5);border-radius:2px;animation:scrollDown 2s ease infinite}
+@keyframes scrollDown{0%{transform:translateX(-50%) translateY(0);opacity:1}100%{transform:translateX(-50%) translateY(14px);opacity:0}}
+
+/* ── LOTTIE CAR SECTION ── */
+.car-section{
+  position:relative;height:300px;overflow:hidden;
+  background:linear-gradient(180deg,#06060f 0%,#0a0a1f 50%,#06060f 100%);
+}
+.car-road{position:absolute;bottom:60px;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.08) 15%,rgba(255,255,255,0.08) 85%,transparent)}
+.car-road-dashes{
+  position:absolute;bottom:61px;left:0;width:200%;height:1px;
+  background:repeating-linear-gradient(90deg,transparent,transparent 30px,rgba(255,255,255,0.12) 30px,rgba(255,255,255,0.12) 50px);
+}
+.car-container{
+  position:absolute;bottom:30px;left:-250px;width:200px;height:100px;
+  filter:drop-shadow(0 10px 30px rgba(99,102,241,0.3));
+}
+.car-headlight-beam{
+  position:absolute;bottom:70px;left:-250px;width:350px;height:60px;
+  background:radial-gradient(ellipse at left center, rgba(255,230,150,0.06) 0%, transparent 70%);
+  filter:blur(15px);pointer-events:none;
+}
+.car-exhaust{position:absolute;bottom:68px;left:-250px;opacity:0}
+.exhaust-puff{
+  width:12px;height:12px;border-radius:50%;
+  background:rgba(255,255,255,0.04);
+  position:absolute;
+}
+.car-text{
+  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  font-family:'Archivo Black',sans-serif;font-size:clamp(20px,4vw,32px);
+  color:rgba(255,255,255,0.06);text-transform:uppercase;letter-spacing:10px;
+  white-space:nowrap;
+}
+.car-speed-lines{position:absolute;bottom:65px;left:0;right:0;height:30px;overflow:hidden;opacity:0}
+.speed-line{
+  position:absolute;height:1px;background:linear-gradient(90deg,rgba(99,102,241,0.3),transparent);
+  animation:speedLineMove 0.5s linear infinite;
+}
+@keyframes speedLineMove{0%{transform:translateX(0)}100%{transform:translateX(-200px)}}
+
+/* ── LOTTIE TIRE SECTION ── */
+.tire-divider{
+  display:flex;align-items:center;justify-content:center;
+  padding:40px 24px;background:#06060f;overflow:hidden;
+}
+.tire-lottie-track{
+  display:flex;align-items:center;gap:0;width:100%;max-width:1200px;
+  position:relative;
+}
+.tire-lottie-wrap{
+  width:80px;height:80px;flex-shrink:0;position:relative;
+}
+.tire-track-line{
+  flex:1;height:2px;
+  background:linear-gradient(90deg,rgba(99,102,241,0.4),rgba(236,72,153,0.4));
+  transform:scaleX(0);transform-origin:left;
+}
+
+/* ── SERVICES ── */
+.services-section{padding:100px 24px;position:relative;background:#0c0c24}
+.section-header{text-align:center;margin-bottom:60px}
+.section-tag{font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:4px;color:#6366f1;margin-bottom:12px;opacity:0}
+.section-title{font-family:'Archivo Black',sans-serif;font-size:clamp(36px,6vw,56px);line-height:1.05;opacity:0}
+.section-title span{background:linear-gradient(135deg,#6366f1,#ec4899);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+
+.services-grid{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+  gap:24px;max-width:1100px;margin:0 auto;
+}
+.svc-card{
+  background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);
+  border-radius:20px;padding:36px 28px;position:relative;overflow:hidden;
+  opacity:0;transform:translateY(60px);
+}
+.svc-card:hover{background:rgba(255,255,255,0.06);border-color:rgba(99,102,241,0.3)}
+.svc-card .top-line{
+  position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,#6366f1,#ec4899);transform:scaleX(0);transform-origin:left;
+  transition:transform 0.5s;
+}
+.svc-card:hover .top-line{transform:scaleX(1)}
+.svc-icon{
+  width:64px;height:64px;border-radius:16px;
+  background:linear-gradient(135deg,rgba(99,102,241,0.15),rgba(236,72,153,0.15));
+  border:1px solid rgba(255,255,255,0.08);
+  display:flex;align-items:center;justify-content:center;margin-bottom:20px;
+  overflow:hidden;
+}
+.svc-card h3{font-size:18px;font-weight:700;margin-bottom:8px}
+.svc-card p{font-size:14px;color:rgba(255,255,255,0.5);line-height:1.6}
+
+/* ── HORIZONTAL SCROLL PANEL (Stripe-style) ── */
+.hscroll-section{
+  padding:100px 0;background:linear-gradient(180deg,#0c0c24,#0f0f2a);
+  overflow:hidden;
+}
+.hscroll-header{text-align:center;padding:0 24px;margin-bottom:48px}
+.hscroll-track{
+  display:flex;gap:24px;padding:0 48px;width:max-content;
+}
+.hscroll-card{
+  width:340px;flex-shrink:0;
+  background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);
+  border-radius:20px;padding:32px;position:relative;overflow:hidden;
+}
+.hscroll-card:hover{background:rgba(255,255,255,0.07);border-color:rgba(236,72,153,0.3)}
+.hscroll-card .review-stars{color:#fbbf24;font-size:18px;letter-spacing:2px;margin-bottom:12px}
+.hscroll-card blockquote{font-size:15px;color:rgba(255,255,255,0.8);line-height:1.7;font-style:italic}
+.hscroll-card .reviewer{font-size:13px;color:rgba(255,255,255,0.4);margin-top:14px;font-weight:500}
+.hscroll-card .card-glow{
+  position:absolute;top:-50%;left:-50%;width:200%;height:200%;
+  background:radial-gradient(circle at center,rgba(99,102,241,0.08),transparent 60%);
+  opacity:0;transition:opacity 0.5s;pointer-events:none;
+}
+.hscroll-card:hover .card-glow{opacity:1}
+
+/* ── PARALLAX STATS ── */
+.stats-section{
+  padding:120px 24px;position:relative;overflow:hidden;
+  background:linear-gradient(180deg,#0f0f2a,#06060f);
+}
+.stats-bg-text{
+  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+  font-family:'Archivo Black',sans-serif;font-size:clamp(100px,20vw,300px);
+  color:rgba(255,255,255,0.015);white-space:nowrap;pointer-events:none;
+}
+.stats-grid{display:flex;justify-content:center;gap:80px;flex-wrap:wrap;max-width:900px;margin:0 auto;position:relative;z-index:1}
+.stat-item{text-align:center;opacity:0;transform:translateY(40px)}
+.stat-number{
+  font-family:'Archivo Black',sans-serif;font-size:clamp(56px,10vw,80px);
+  background:linear-gradient(135deg,#6366f1,#ec4899);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+}
+.stat-label{font-size:14px;color:rgba(255,255,255,0.4);text-transform:uppercase;letter-spacing:3px;margin-top:4px}
+.stat-sublabel{font-size:12px;color:rgba(255,255,255,0.2);margin-top:2px}
+
+/* ── HOURS (stagger reveal) ── */
+.hours-section{padding:100px 24px;background:#06060f}
+.hours-container{max-width:600px;margin:0 auto}
+.hours-row{
+  display:flex;justify-content:space-between;padding:16px 0;
+  border-bottom:1px solid rgba(255,255,255,0.06);font-size:15px;
+  opacity:0;transform:translateX(-40px);
+}
+.hours-row .day{color:rgba(255,255,255,0.8);font-weight:500}
+.hours-row .time{color:rgba(255,255,255,0.4)}
+.hours-row.closed .time{color:#ec4899;font-weight:600}
+.hours-row.today{border-left:3px solid #22c55e;padding-left:16px}
+.hours-row.today .day{color:#22c55e}
+
+/* ── BIG CTA WITH REVEAL ── */
+.big-cta{padding:140px 24px;text-align:center;position:relative;overflow:hidden}
+.big-cta-bg{
+  position:absolute;inset:0;
+  background:radial-gradient(ellipse at center,rgba(99,102,241,0.12) 0%,transparent 60%);
+  opacity:0;
+}
+.big-cta h2{
+  font-family:'Archivo Black',sans-serif;font-size:clamp(44px,8vw,90px);
+  line-height:1;position:relative;opacity:0;
+}
+.big-cta h2 .white{color:#fff}
+.big-cta h2 .gradient{background:linear-gradient(135deg,#6366f1,#ec4899);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.big-cta .big-phone{
+  font-family:'Archivo Black',sans-serif;font-size:clamp(28px,5vw,56px);
+  color:#fff;text-decoration:none;display:inline-block;margin-top:20px;
+  position:relative;transition:all 0.3s;opacity:0;
+}
+.big-cta .big-phone:hover{transform:scale(1.05)}
+.big-cta .big-phone:hover .phone-underline{transform:scaleX(1)}
+.phone-underline{
+  position:absolute;bottom:-4px;left:0;right:0;height:4px;
+  background:linear-gradient(90deg,#6366f1,#ec4899);
+  transform:scaleX(0);transition:transform 0.4s;transform-origin:left;
+}
+.big-cta .espanol{margin-top:24px;font-size:16px;color:rgba(255,255,255,0.4);position:relative;opacity:0}
+.big-cta .espanol span{color:#ec4899;font-weight:600}
+
+/* ── CONTACT ── */
+.contact-section{padding:80px 24px;background:linear-gradient(180deg,#06060f,#0a0a18)}
+.contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:40px;max-width:1000px;margin:40px auto 0}
+.contact-item{display:flex;align-items:flex-start;gap:16px;opacity:0;transform:translateY(20px)}
+.contact-icon{
+  width:48px;height:48px;border-radius:12px;
+  background:rgba(99,102,241,0.1);border:1px solid rgba(99,102,241,0.2);
+  display:flex;align-items:center;justify-content:center;flex-shrink:0;
+}
+.contact-label{font-size:12px;color:rgba(255,255,255,0.4);text-transform:uppercase;letter-spacing:1px;margin-bottom:4px}
+.contact-value{font-size:16px;font-weight:600}
+.contact-value a{color:#fff;text-decoration:none;transition:color 0.3s}
+.contact-value a:hover{color:#6366f1}
+.map-wrap{border-radius:16px;overflow:hidden;border:1px solid rgba(255,255,255,0.08);height:280px;opacity:0;transform:scale(0.9)}
+.map-wrap iframe{width:100%;height:100%;border:0}
+
+/* ── FOOTER ── */
+footer{padding:32px 24px;text-align:center;border-top:1px solid rgba(255,255,255,0.06);background:#06060f}
+footer p{font-size:13px;color:rgba(255,255,255,0.3)}
+footer a{color:rgba(255,255,255,0.3);text-decoration:none}
+
+/* ── MOBILE BAR ── */
+.mobile-bar{
+  display:none;position:fixed;bottom:0;left:0;right:0;z-index:1000;
+  background:rgba(6,6,15,0.95);backdrop-filter:blur(16px);
+  border-top:1px solid rgba(99,102,241,0.3);padding:12px 16px;gap:10px;
+}
+.mobile-bar a{flex:1;display:flex;align-items:center;justify-content:center;gap:8px;padding:14px;border-radius:12px;font-size:14px;font-weight:700;text-decoration:none}
+.mobile-bar .bar-call{background:linear-gradient(135deg,#6366f1,#ec4899);color:#fff}
+.mobile-bar .bar-dir{background:rgba(255,255,255,0.06);color:#fff;border:1px solid rgba(255,255,255,0.1)}
+
+@media(max-width:768px){
+  .mobile-bar{display:flex}
+  body{padding-bottom:80px}
+  .nav-links,.nav-cta{display:none}
+  .hero-stats{gap:24px}
+  .contact-grid{grid-template-columns:1fr}
+  .stats-grid{gap:40px}
+  .hscroll-card{width:280px}
+}
+</style>
+</head>
+<body>
+
+<!-- ═══ PROGRESS BAR ═══ -->
+<div class="progress-bar" id="progressBar"></div>
+
+<!-- ═══ MOBILE BAR ═══ -->
+<div class="mobile-bar">
+  <a href="tel:+14237234256" class="bar-call">
+    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.79 19.79 0 0 1 2.12 4.11 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.81.36 1.6.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c1.21.34 2 .57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+    Call Now
+  </a>
+  <a href="https://www.google.com/maps/dir/?api=1&destination=2588+Georgetown+Rd+NW+Cleveland+TN+37311" class="bar-dir">
+    <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg>
+    Directions
+  </a>
+</div>
+
+<!-- ═══ NAVBAR ═══ -->
+<nav class="navbar" id="navbar">
+  <div class="nav-brand">ALFREDO'S <span>TIRE SHOP</span></div>
+  <ul class="nav-links">
+    <li><a href="#services">Services</a></li>
+    <li><a href="#reviews">Reviews</a></li>
+    <li><a href="#hours">Hours</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <a href="tel:+14237234256" class="nav-cta">Se Habla Español</a>
+</nav>
+
+<!-- ═══ HERO ═══ -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-content">
+    <div class="hero-badge"><div class="live-dot"></div> Cleveland, Tennessee</div>
+    <h1><span class="line1">ALFREDO'S</span><span class="line2">TIRE SHOP</span></h1>
+    <p class="hero-sub">New &amp; used tires, oil changes, and auto repair.<br/>Fast service. Fair prices. No surprises.</p>
+    <div class="hero-stats">
+      <div class="hero-stat"><div class="num" id="heroRating">0</div><div class="label">Google Rating</div></div>
+      <div class="hero-stat"><div class="num" id="heroReviews">0</div><div class="label">Reviews</div></div>
+      <div class="hero-stat"><div class="num" id="heroDays">0</div><div class="label">Days Open</div></div>
+    </div>
+    <div class="hero-cta">
+      <a href="tel:+14237234256" class="btn-glow">
+        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.79 19.79 0 0 1 2.12 4.11 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.81.36 1.6.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c1.21.34 2 .57 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+        Call Now
+      </a>
+      <a href="https://www.google.com/maps/dir/?api=1&destination=2588+Georgetown+Rd+NW+Cleveland+TN+37311" class="btn-outline" target="_blank">
+        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg>
+        Get Directions
+      </a>
+    </div>
+  </div>
+  <div class="scroll-indicator"><div class="scroll-mouse"></div><span>Scroll</span></div>
+</section>
+
+<!-- ═══ SERVICES ═══ -->
+<section class="services-section" id="services">
+  <div class="section-header">
+    <div class="section-tag">What We Do</div>
+    <h2 class="section-title">Our <span>Services</span></h2>
+  </div>
+  <div class="services-grid">
+    <div class="svc-card">
+      <div class="top-line"></div>
+      <div class="svc-icon">
+        <svg width="32" height="32" viewBox="0 0 40 40" style="animation:tireSpin 6s linear infinite">
+          <circle cx="20" cy="20" r="17" stroke="#a78bfa" stroke-width="2" fill="none"/>
+          <circle cx="20" cy="20" r="11" stroke="#a78bfa" stroke-width="3" fill="none" opacity="0.3"/>
+          <circle cx="20" cy="20" r="4" fill="#a78bfa"/>
+          <line x1="20" y1="3" x2="20" y2="9" stroke="#6366f1" stroke-width="1.5"/>
+          <line x1="20" y1="31" x2="20" y2="37" stroke="#6366f1" stroke-width="1.5"/>
+          <line x1="3" y1="20" x2="9" y2="20" stroke="#6366f1" stroke-width="1.5"/>
+          <line x1="31" y1="20" x2="37" y2="20" stroke="#6366f1" stroke-width="1.5"/>
+          <line x1="8" y1="8" x2="12" y2="12" stroke="#6366f1" stroke-width="1.5"/>
+          <line x1="28" y1="28" x2="32" y2="32" stroke="#6366f1" stroke-width="1.5"/>
+          <line x1="32" y1="8" x2="28" y2="12" stroke="#6366f1" stroke-width="1.5"/>
+          <line x1="12" y1="28" x2="8" y2="32" stroke="#6366f1" stroke-width="1.5"/>
+        </svg>
+      </div>
+      <h3>New &amp; Used Tires</h3>
+      <p>Quality tires for cars, trucks, and SUVs. We'll find the right fit at the right price. Mounting and balancing included.</p>
+    </div>
+    <div class="svc-card">
+      <div class="top-line"></div>
+      <div class="svc-icon">
+        <svg width="32" height="32" viewBox="0 0 40 40" style="animation:dropBounce 2.5s ease-in-out infinite">
+          <path d="M20 4 C20 4 32 18 32 25 C32 32 27 36 20 36 C13 36 8 32 8 25 C8 18 20 4 20 4Z" fill="#ec4899" opacity="0.6"/>
+          <path d="M20 4 C20 4 32 18 32 25 C32 32 27 36 20 36 C13 36 8 32 8 25 C8 18 20 4 20 4Z" stroke="#ec4899" stroke-width="1.5" fill="none"/>
+          <ellipse cx="16" cy="23" rx="4" ry="6" fill="rgba(255,255,255,0.15)" transform="rotate(-15 16 23)"/>
+        </svg>
+      </div>
+      <h3>Oil Changes</h3>
+      <p>Quick, affordable oil changes to keep your engine running smooth. No appointment needed -- just pull up.</p>
+    </div>
+    <div class="svc-card">
+      <div class="top-line"></div>
+      <div class="svc-icon">
+        <svg width="32" height="32" viewBox="0 0 40 40" style="animation:wrenchSwing 3s ease-in-out infinite;transform-origin:center">
+          <path d="M8 32 L24 16 C26 14 30 14 32 16 C34 18 34 22 32 24 L28 28 Z" stroke="#0ea5e9" stroke-width="2" fill="none"/>
+          <circle cx="8" cy="32" r="3" fill="#0ea5e9"/>
+          <path d="M26 14 L30 10" stroke="#0ea5e9" stroke-width="1.5"/>
+          <circle cx="30" cy="20" r="2" fill="#0ea5e9" opacity="0.4"/>
+        </svg>
+      </div>
+      <h3>Basic Maintenance</h3>
+      <p>Brake checks, fluid top-offs, belt inspections, radiator work, and routine maintenance to keep you on the road.</p>
+    </div>
+    <div class="svc-card">
+      <div class="top-line"></div>
+      <div class="svc-icon">
+        <svg width="32" height="32" viewBox="0 0 40 40" style="animation:carIdle 2s ease-in-out infinite">
+          <rect x="2" y="18" width="36" height="14" rx="4" stroke="#6366f1" stroke-width="2" fill="none"/>
+          <path d="M8 18 L14 8 L26 8 L32 18" stroke="#6366f1" stroke-width="2" fill="none"/>
+          <rect x="16" y="10" width="8" height="7" rx="1.5" fill="rgba(99,102,241,0.15)" stroke="rgba(99,102,241,0.3)" stroke-width="0.5"/>
+          <circle cx="12" cy="32" r="3.5" stroke="#ec4899" stroke-width="1.5" fill="none"/>
+          <circle cx="12" cy="32" r="1.5" fill="#ec4899"/>
+          <circle cx="28" cy="32" r="3.5" stroke="#ec4899" stroke-width="1.5" fill="none"/>
+          <circle cx="28" cy="32" r="1.5" fill="#ec4899"/>
+          <rect x="6" y="22" width="6" height="3" rx="1" fill="rgba(99,102,241,0.3)"/>
+          <rect x="28" y="22" width="6" height="3" rx="1" fill="rgba(236,72,153,0.3)"/>
+        </svg>
+      </div>
+      <h3>General Repair</h3>
+      <p>Vibrations, leaks, or something not sounding right? Bring it in. Honest diagnosis, honest price.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ REVIEWS (horizontal scroll, Stripe-style) ═══ -->
+<section class="hscroll-section" id="reviews">
+  <div class="hscroll-header">
+    <div class="section-tag">What Customers Say</div>
+    <h2 class="section-title">Real <span>Google Reviews</span></h2>
+  </div>
+  <div class="hscroll-track" id="hscrollTrack">
+    <div class="hscroll-card"><div class="card-glow"></div><div class="review-stars">★★★★★</div><blockquote>"My vehicle overheated coming off of 75. They took care of my emergency and got me home safely -- without taking advantage of the situation. Always good to have an honest mechanic."</blockquote><div class="reviewer">-- Google Reviewer</div></div>
+    <div class="hscroll-card"><div class="card-glow"></div><div class="review-stars">★★★★★</div><blockquote>"He was super fast changing my tire and the price was great too."</blockquote><div class="reviewer">-- Google Reviewer</div></div>
+    <div class="hscroll-card"><div class="card-glow"></div><div class="review-stars">★★★★★</div><blockquote>"Both man and women there were very helpful and got me out of there in less than an hour."</blockquote><div class="reviewer">-- Google Reviewer</div></div>
+    <div class="hscroll-card"><div class="card-glow"></div><div class="review-stars">★★★★★</div><blockquote>"Had a terrible vibration in my car and he changed 2 of my tires and gave my car a good look to make sure I was runnin good."</blockquote><div class="reviewer">-- Google Reviewer</div></div>
+    <div class="hscroll-card"><div class="card-glow"></div><div class="review-stars">★★★★★</div><blockquote>"Fast. Friendly. Fair prices."</blockquote><div class="reviewer">-- Google Reviewer</div></div>
+    <div class="hscroll-card"><div class="card-glow"></div><div class="review-stars">★★★★★</div><blockquote>"When I got paid I went back and he made me a good deal on new tire for my truck!"</blockquote><div class="reviewer">-- Google Reviewer</div></div>
+  </div>
+</section>
+
+<!-- ═══ STATS (parallax text) ═══ -->
+<section class="stats-section" id="statsSection">
+  <div class="stats-bg-text" id="statsBgText">ALFREDO'S</div>
+  <div class="stats-grid">
+    <div class="stat-item"><div class="stat-number" id="statRating">0</div><div class="stat-label">Rating</div><div class="stat-sublabel">out of 5.0</div></div>
+    <div class="stat-item"><div class="stat-number" id="statReviews">0</div><div class="stat-label">Reviews</div><div class="stat-sublabel">on Google</div></div>
+    <div class="stat-item"><div class="stat-number" id="statDays">0</div><div class="stat-label">Days a Week</div><div class="stat-sublabel">open for you</div></div>
+  </div>
+</section>
+
+<!-- ═══ HOURS ═══ -->
+<section class="hours-section" id="hours">
+  <div class="section-header">
+    <div class="section-tag">When We're Open</div>
+    <h2 class="section-title">Hours of <span>Operation</span></h2>
+  </div>
+  <div class="hours-container">
+    <div class="hours-row" data-day="1"><span class="day">Monday</span><span class="time">8:00 AM -- 5:30 PM</span></div>
+    <div class="hours-row" data-day="2"><span class="day">Tuesday</span><span class="time">8:00 AM -- 5:30 PM</span></div>
+    <div class="hours-row" data-day="3"><span class="day">Wednesday</span><span class="time">8:00 AM -- 5:30 PM</span></div>
+    <div class="hours-row" data-day="4"><span class="day">Thursday</span><span class="time">8:00 AM -- 5:30 PM</span></div>
+    <div class="hours-row" data-day="5"><span class="day">Friday</span><span class="time">8:00 AM -- 5:30 PM</span></div>
+    <div class="hours-row closed" data-day="6"><span class="day">Saturday</span><span class="time">Closed</span></div>
+    <div class="hours-row" data-day="0"><span class="day">Sunday</span><span class="time">8:00 AM -- 3:30 PM</span></div>
+  </div>
+</section>
+
+<!-- ═══ GALLERY ═══ -->
+<section id="gallery" style="padding:80px 24px;background:#0c0c24">
+  <div style="max-width:1100px;margin:0 auto">
+    <div class="section-tag" style="text-align:center">See Our Shop</div>
+    <h2 class="section-title" style="text-align:center">Our <span>Gallery</span></h2>
+    <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-top:48px">
+      <img src="images/shop-front.png" alt="Alfredo's Tire Shop front view" style="width:100%;height:350px;object-fit:cover;border-radius:16px;border:1px solid rgba(255,255,255,0.08);grid-column:span 2;opacity:0;transform:translateY(30px)" class="gallery-img" loading="lazy"/>
+      <img src="images/sign.png" alt="Alfredo's Tire Shop road sign" style="width:100%;height:250px;object-fit:cover;border-radius:16px;border:1px solid rgba(255,255,255,0.08);opacity:0;transform:translateY(30px)" class="gallery-img" loading="lazy"/>
+      <img src="images/car-lift.png" alt="Truck on hydraulic lift" style="width:100%;height:250px;object-fit:cover;border-radius:16px;border:1px solid rgba(255,255,255,0.08);opacity:0;transform:translateY(30px)" class="gallery-img" loading="lazy"/>
+      <img src="images/audi-car.png" alt="White Audi at Alfredo's Tire Shop" style="width:100%;height:250px;object-fit:cover;border-radius:16px;border:1px solid rgba(255,255,255,0.08);grid-column:span 2;opacity:0;transform:translateY(30px)" class="gallery-img" loading="lazy"/>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ BIG CTA ═══ -->
+<section class="big-cta" id="bigCta">
+  <div class="big-cta-bg" id="ctaBg"></div>
+  <h2><span class="white">Need Tires?</span><br/><span class="gradient">Just Call.</span></h2>
+  <a href="tel:+14237234256" class="big-phone">(423) 723-4256<div class="phone-underline"></div></a>
+  <p class="espanol">Walk-ins welcome &bull; <span>Se habla español</span></p>
+</section>
+
+<!-- ═══ CONTACT ═══ -->
+<section class="contact-section" id="contact">
+  <div class="section-header">
+    <div class="section-tag">Find Us</div>
+    <h2 class="section-title">Contact &amp; <span>Location</span></h2>
+  </div>
+  <div class="contact-grid">
+    <div>
+      <div class="contact-item" style="margin-bottom:24px">
+        <div class="contact-icon"><svg width="22" height="22" fill="none" stroke="#6366f1" stroke-width="2" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.79 19.79 0 0 1 2.12 4.11 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.81.36 1.6.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c1.21.34 2 .57 2.81.7A2 2 0 0 1 22 16.92z"/></svg></div>
+        <div><div class="contact-label">Phone</div><div class="contact-value"><a href="tel:+14237234256">(423) 723-4256</a></div></div>
+      </div>
+      <div class="contact-item" style="margin-bottom:24px">
+        <div class="contact-icon"><svg width="22" height="22" fill="none" stroke="#ec4899" stroke-width="2" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></div>
+        <div><div class="contact-label">Address</div><div class="contact-value"><a href="https://www.google.com/maps/dir/?api=1&destination=2588+Georgetown+Rd+NW+Cleveland+TN+37311" target="_blank">2588 Georgetown Rd NW<br/>Cleveland, TN 37311</a></div></div>
+      </div>
+      <div class="contact-item">
+        <div class="contact-icon"><svg width="22" height="22" fill="none" stroke="#0ea5e9" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></div>
+        <div><div class="contact-label">Languages</div><div class="contact-value">English &amp; Español</div></div>
+      </div>
+    </div>
+    <div class="map-wrap">
+      <iframe src="https://www.google.com/maps/embed/v1/place?key=AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8&q=Alfredo%27s+Tires+Shop,2588+Georgetown+Rd+NW,Cleveland,TN+37311&zoom=15" allowfullscreen loading="lazy" title="Location"></iframe>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p>&copy; 2026 Alfredo's Tire Shop -- 2588 Georgetown Rd NW, Cleveland, TN 37311 -- <a href="tel:+14237234256">(423) 723-4256</a></p>
+</footer>
+
+<script>
+// Check if GSAP loaded
+if (typeof gsap === 'undefined') {
+  console.error('GSAP not loaded! Making everything visible.');
+  document.querySelectorAll('[style*="opacity"], .svc-card, .section-tag, .section-title, .stat-item, .hours-row, .contact-item, .map-wrap, .big-cta h2, .big-phone, .espanol, .scroll-indicator').forEach(el => {
+    el.style.opacity = '1';
+    el.style.transform = 'none';
+  });
+} else {
+
+gsap.registerPlugin(ScrollTrigger);
+
+// ── PROGRESS BAR ──
+gsap.to('#progressBar', {
+  scaleX: 1, ease: 'none',
+  scrollTrigger: { scrub: 0.3, trigger: 'body', start: 'top top', end: 'bottom bottom' }
+});
+
+// ── NAVBAR ──
+window.addEventListener('scroll', () => {
+  document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 50);
+});
+
+// ── HERO ENTRANCE ──
+gsap.set(['.hero-badge','.hero h1','.hero-sub','.hero-stats','.hero-cta','.scroll-indicator'], {opacity:0, y:30});
+const heroTl = gsap.timeline({ delay: 0.3 });
+heroTl
+  .to('.hero-badge', { opacity:1, y:0, duration:0.8, ease:'power3.out' })
+  .to('.hero h1', { opacity:1, y:0, duration:1, ease:'power3.out' }, '-=0.4')
+  .to('.hero-sub', { opacity:1, y:0, duration:0.8, ease:'power3.out' }, '-=0.5')
+  .to('.hero-stats', { opacity:1, y:0, duration:0.8, ease:'power3.out' }, '-=0.4')
+  .to('.hero-cta', { opacity:1, y:0, duration:0.8, ease:'power3.out' }, '-=0.4')
+  .to('.scroll-indicator', { opacity:1, y:0, duration:0.6, ease:'power3.out' }, '-=0.3');
+
+// ── HERO COUNTER ──
+heroTl.add(() => {
+  gsap.to({}, { duration:2, ease:'power2.out',
+    onUpdate: function() {
+      const p = this.progress();
+      document.getElementById('heroRating').textContent = (4.4*p).toFixed(1);
+      document.getElementById('heroReviews').textContent = Math.round(55*p);
+      document.getElementById('heroDays').textContent = Math.round(6*p);
+    }
+  });
+}, '-=1.5');
+
+// ── SCROLL INDICATOR FADE ──
+gsap.to('.scroll-indicator', {
+  opacity:0, scrollTrigger:{ trigger:'.hero', start:'top top', end:'20% top', scrub:true }
+});
+
+// ── CAR SCENE ──
+const carTl = gsap.timeline({
+  scrollTrigger:{ trigger:'#carSection', start:'top 80%', end:'bottom 20%', scrub:1 }
+});
+carTl
+  .fromTo('#carMain', {x:-250}, {x:window.innerWidth+100, duration:3, ease:'power2.inOut'})
+  .fromTo('#headlightBeam', {x:-250,opacity:0}, {x:window.innerWidth+100,opacity:0.6,duration:3,ease:'power2.inOut'}, 0)
+  .fromTo('#speedLines', {x:-250,opacity:0}, {x:window.innerWidth+100,opacity:1,duration:3,ease:'power2.inOut'}, 0)
+  .fromTo('.car-text', {x:100,opacity:0}, {x:-100,opacity:0.06,duration:3,ease:'none'}, 0);
+
+gsap.to('#roadDashes', {
+  x:-100, ease:'none',
+  scrollTrigger:{ trigger:'#carSection', start:'top 80%', end:'bottom 20%', scrub:true }
+});
+
+// ── TIRE DIVIDER ──
+gsap.from('#tireLottie', {
+  x:-600, rotation:-720,
+  scrollTrigger:{ trigger:'#tireDivider', start:'top 80%', end:'center center', scrub:1 }
+});
+gsap.to('#tireTrackLine', {
+  scaleX:1, scrollTrigger:{ trigger:'#tireDivider', start:'top 80%', end:'center center', scrub:1 }
+});
+gsap.to('#tireTrackLine2', {
+  scaleX:1, scrollTrigger:{ trigger:'#tireDivider', start:'center center', end:'bottom 20%', scrub:1 }
+});
+
+// ── SECTION HEADERS ──
+gsap.utils.toArray('.section-tag').forEach(el => {
+  gsap.to(el, {opacity:1, y:0, duration:0.6, scrollTrigger:{trigger:el,start:'top 85%'}});
+});
+gsap.utils.toArray('.section-title').forEach(el => {
+  gsap.to(el, {opacity:1, y:0, duration:0.8, scrollTrigger:{trigger:el,start:'top 85%'}});
+});
+
+// ── SERVICE CARDS ──
+gsap.utils.toArray('.svc-card').forEach((card,i) => {
+  gsap.to(card, {
+    opacity:1, y:0, rotation:0, duration:0.8, delay:i*0.15, ease:'power3.out',
+    scrollTrigger:{trigger:card,start:'top 85%'}
+  });
+});
+
+// ── HORIZONTAL SCROLL (reviews) ──
+const hscrollTrack = document.getElementById('hscrollTrack');
+if (hscrollTrack) {
+  const totalScroll = hscrollTrack.scrollWidth - window.innerWidth;
+  gsap.to('#hscrollTrack', {
+    x: () => -totalScroll, ease:'none',
+    scrollTrigger:{
+      trigger:'.hscroll-section', start:'top top',
+      end:()=>`+=${totalScroll}`, scrub:1, pin:true, anticipatePin:1
+    }
+  });
+}
+
+// ── STATS ──
+gsap.to('#statsBgText', {
+  x:-200, ease:'none',
+  scrollTrigger:{trigger:'.stats-section',start:'top bottom',end:'bottom top',scrub:true}
+});
+gsap.utils.toArray('.stat-item').forEach((item,i) => {
+  gsap.to(item, {opacity:1,y:0,duration:0.8,delay:i*0.2,ease:'power3.out',
+    scrollTrigger:{trigger:item,start:'top 85%'}});
+});
+ScrollTrigger.create({
+  trigger:'#statsSection', start:'top 70%', once:true,
+  onEnter:() => {
+    gsap.to({},{duration:2,ease:'power2.out',
+      onUpdate:function(){
+        const p=this.progress();
+        document.getElementById('statRating').textContent=(4.4*p).toFixed(1);
+        document.getElementById('statReviews').textContent=Math.round(55*p);
+        document.getElementById('statDays').textContent=Math.round(6*p);
+      }
+    });
+  }
+});
+
+// ── HOURS ──
+gsap.utils.toArray('.hours-row').forEach((row,i) => {
+  gsap.to(row,{opacity:1,x:0,duration:0.5,delay:i*0.1,ease:'power2.out',
+    scrollTrigger:{trigger:row,start:'top 90%'}});
+});
+
+// ── BIG CTA ──
+const ctaTl = gsap.timeline({scrollTrigger:{trigger:'#bigCta',start:'top 70%'}});
+ctaTl
+  .to('#ctaBg',{opacity:1,scale:1,duration:1,ease:'power2.out'})
+  .to('#bigCta h2',{opacity:1,y:0,scale:1,duration:0.8,ease:'back.out(1.7)'},'-=0.6')
+  .to('.big-phone',{opacity:1,y:0,duration:0.6,ease:'power3.out'},'-=0.3')
+  .to('.espanol',{opacity:1,y:0,duration:0.6,ease:'power3.out'},'-=0.2');
+
+// ── CONTACT ──
+gsap.utils.toArray('.contact-item').forEach((item,i) => {
+  gsap.to(item,{opacity:1,y:0,duration:0.6,delay:i*0.15,ease:'power2.out',
+    scrollTrigger:{trigger:item,start:'top 85%'}});
+});
+gsap.to('.map-wrap',{opacity:1,scale:1,duration:0.8,ease:'power2.out',
+  scrollTrigger:{trigger:'.map-wrap',start:'top 85%'}});
+
+} // end GSAP check
+
+// ── TODAY HIGHLIGHT (no GSAP needed) ──
+const today = new Date().getDay();
+const todayRow = document.querySelector(`.hours-row[data-day="${today}"]`);
+if (todayRow && !todayRow.classList.contains('closed')) todayRow.classList.add('today');
+</script>
+</body>
+</html>

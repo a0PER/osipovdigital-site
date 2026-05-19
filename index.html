@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Website Design Portfolio | Osipov Digital</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Archivo+Black&display=swap" rel="stylesheet"/>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#06060f;color:#fff;font-family:'Space Grotesk',sans-serif}
+.container{max-width:1100px;margin:0 auto;padding:0 24px}
+
+/* Hero */
+.hero{text-align:center;padding:80px 24px 60px}
+.hero-badge{
+  display:inline-flex;align-items:center;gap:8px;
+  background:rgba(99,102,241,0.1);border:1px solid rgba(99,102,241,0.25);
+  padding:8px 20px;border-radius:30px;font-size:13px;font-weight:500;color:#a78bfa;
+  margin-bottom:24px;
+}
+.hero h1{
+  font-family:'Archivo Black',sans-serif;font-size:clamp(36px,7vw,64px);
+  line-height:1;margin-bottom:16px;
+}
+.hero h1 span{
+  background:linear-gradient(135deg,#6366f1,#ec4899);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+}
+.hero p{font-size:18px;color:rgba(255,255,255,0.5);max-width:600px;margin:0 auto;line-height:1.6;font-weight:300}
+
+/* Stats */
+.stats{display:flex;justify-content:center;gap:60px;padding:40px 24px;flex-wrap:wrap}
+.stat{text-align:center}
+.stat .num{font-family:'Archivo Black',sans-serif;font-size:36px;color:#fff}
+.stat .label{font-size:12px;color:rgba(255,255,255,0.4);text-transform:uppercase;letter-spacing:2px;margin-top:4px}
+
+/* Section */
+.section-header{text-align:center;margin-bottom:48px}
+.section-tag{font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:4px;color:#6366f1;margin-bottom:12px}
+.section-title{font-family:'Archivo Black',sans-serif;font-size:clamp(28px,5vw,42px);line-height:1.1}
+.section-title span{background:linear-gradient(135deg,#6366f1,#ec4899);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+
+/* Template Cards */
+.templates-section{padding:80px 24px}
+.templates-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:24px;max-width:1100px;margin:0 auto}
+
+.template-card{
+  background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);
+  border-radius:20px;overflow:hidden;transition:all 0.4s;position:relative;
+}
+.template-card:hover{
+  transform:translateY(-8px);border-color:rgba(99,102,241,0.3);
+  box-shadow:0 20px 60px rgba(99,102,241,0.1);
+}
+.template-preview{
+  height:200px;position:relative;overflow:hidden;
+}
+.template-preview iframe{
+  width:200%;height:200%;transform:scale(0.5);transform-origin:top left;
+  border:0;pointer-events:none;
+}
+.template-overlay{
+  position:absolute;inset:0;background:linear-gradient(180deg,transparent 60%,rgba(6,6,15,0.9));
+  display:flex;align-items:flex-end;justify-content:center;padding-bottom:16px;
+  opacity:0;transition:opacity 0.3s;
+}
+.template-card:hover .template-overlay{opacity:1}
+.template-overlay a{
+  background:linear-gradient(135deg,#6366f1,#ec4899);color:#fff;
+  padding:10px 24px;border-radius:8px;text-decoration:none;font-size:14px;font-weight:600;
+  transition:transform 0.2s;
+}
+.template-overlay a:hover{transform:scale(1.05)}
+
+.template-info{padding:20px 24px}
+.template-name{font-size:18px;font-weight:700;margin-bottom:4px}
+.template-desc{font-size:13px;color:rgba(255,255,255,0.5);line-height:1.5}
+.template-tags{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
+.tag{
+  font-size:11px;padding:4px 10px;border-radius:20px;
+  background:rgba(99,102,241,0.1);color:#a78bfa;border:1px solid rgba(99,102,241,0.2);
+}
+
+/* Features */
+.features-section{padding:80px 24px;background:linear-gradient(180deg,#06060f,#0c0c24)}
+.features-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:24px;max-width:1100px;margin:0 auto}
+.feature{
+  background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);
+  border-radius:16px;padding:28px 24px;transition:all 0.3s;
+}
+.feature:hover{background:rgba(255,255,255,0.06);border-color:rgba(99,102,241,0.3)}
+.feature-icon{font-size:28px;margin-bottom:12px}
+.feature h3{font-size:16px;font-weight:700;margin-bottom:8px}
+.feature p{font-size:13px;color:rgba(255,255,255,0.5);line-height:1.5}
+
+/* CTA */
+.cta-section{padding:100px 24px;text-align:center}
+.cta-section h2{font-family:'Archivo Black',sans-serif;font-size:clamp(32px,6vw,52px);margin-bottom:16px}
+.cta-section h2 span{background:linear-gradient(135deg,#6366f1,#ec4899);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.cta-section p{font-size:16px;color:rgba(255,255,255,0.5);margin-bottom:32px}
+.cta-btn{
+  display:inline-flex;align-items:center;gap:10px;
+  background:linear-gradient(135deg,#6366f1,#ec4899);color:#fff;
+  padding:16px 40px;border-radius:12px;font-size:16px;font-weight:600;
+  text-decoration:none;transition:all 0.3s;
+}
+.cta-btn:hover{transform:translateY(-3px);box-shadow:0 8px 40px rgba(99,102,241,0.4)}
+
+/* Pricing */
+.pricing-section{padding:80px 24px;background:#0c0c24}
+.pricing-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:24px;max-width:900px;margin:0 auto}
+.price-card{
+  background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);
+  border-radius:20px;padding:32px 28px;text-align:center;transition:all 0.3s;
+}
+.price-card.featured{border-color:rgba(99,102,241,0.4);background:rgba(99,102,241,0.05)}
+.price-card:hover{transform:translateY(-4px)}
+.price-label{font-size:14px;color:rgba(255,255,255,0.5);text-transform:uppercase;letter-spacing:2px;margin-bottom:8px}
+.price-amount{font-family:'Archivo Black',sans-serif;font-size:36px;margin-bottom:4px}
+.price-period{font-size:13px;color:rgba(255,255,255,0.4);margin-bottom:20px}
+.price-features{list-style:none;text-align:left}
+.price-features li{font-size:13px;color:rgba(255,255,255,0.6);padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.06)}
+.price-features li::before{content:'✓ ';color:#6366f1;font-weight:700}
+
+/* Footer */
+footer{padding:32px 24px;text-align:center;border-top:1px solid rgba(255,255,255,0.06)}
+footer p{font-size:13px;color:rgba(255,255,255,0.3)}
+
+@media(max-width:768px){
+  .stats{gap:32px}
+  .templates-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="hero-badge">Web Design for Local Businesses</div>
+  <h1>Professional Websites<br/><span>Affordable Prices</span></h1>
+  <p>Modern, mobile-first websites for local businesses. Fast loading, SEO-ready, and built to make your phone ring. Se habla espanol.</p>
+</section>
+
+<!-- Stats -->
+<div class="stats">
+  <div class="stat"><div class="num">$199</div><div class="label">Starting At</div></div>
+  <div class="stat"><div class="num">4</div><div class="label">Design Styles</div></div>
+  <div class="stat"><div class="num">100</div><div class="label">Google PageSpeed</div></div>
+  <div class="stat"><div class="num">24hr</div><div class="label">Turnaround</div></div>
+</div>
+
+<!-- Templates -->
+<section class="templates-section">
+  <div class="section-header">
+    <div class="section-tag">Choose Your Style</div>
+    <h2 class="section-title">Website <span>Templates</span></h2>
+  </div>
+  <div class="templates-grid">
+
+    <div class="template-card">
+      <div class="template-preview">
+        <iframe src="alfredo-original/index.html" loading="lazy" title="Original Style Preview"></iframe>
+        <div class="template-overlay"><a href="alfredo-original/index.html" target="_blank">View Live Demo</a></div>
+      </div>
+      <div class="template-info">
+        <div class="template-name">Classic Dark</div>
+        <div class="template-desc">Bold black and red with clean typography. Professional and no-nonsense. Perfect for auto shops, contractors, and service businesses.</div>
+        <div class="template-tags"><span class="tag">Dark Theme</span><span class="tag">Mobile-First</span><span class="tag">SEO Ready</span></div>
+      </div>
+    </div>
+
+    <div class="template-card">
+      <div class="template-preview">
+        <iframe src="alfredo-style-previews/index.html" loading="lazy" title="Style Previews"></iframe>
+        <div class="template-overlay"><a href="alfredo-style-previews/index.html" target="_blank">View All 4 Styles</a></div>
+      </div>
+      <div class="template-info">
+        <div class="template-name">4-Style Sampler</div>
+        <div class="template-desc">Bold Industrial, Clean Modern, Warm Approachable, and High Energy. Four complete hero designs in one page so you can pick your vibe.</div>
+        <div class="template-tags"><span class="tag">4 Styles</span><span class="tag">Animated Icons</span><span class="tag">Comparison</span></div>
+      </div>
+    </div>
+
+    <div class="template-card">
+      <div class="template-preview">
+        <iframe src="alfredo-animation/index.html" loading="lazy" title="Animation Showcase Preview"></iframe>
+        <div class="template-overlay"><a href="alfredo-animation/index.html" target="_blank">View Live Demo</a></div>
+      </div>
+      <div class="template-info">
+        <div class="template-name">Scroll Animations</div>
+        <div class="template-desc">CSS-powered scroll animations, floating particles, rolling tire, counter effects, and card reveals. Eye-catching without external libraries.</div>
+        <div class="template-tags"><span class="tag">Animated</span><span class="tag">Scroll Effects</span><span class="tag">Particles</span></div>
+      </div>
+    </div>
+
+    <div class="template-card">
+      <div class="template-preview">
+        <iframe src="alfredo-gsap/index.html" loading="lazy" title="GSAP Showcase Preview"></iframe>
+        <div class="template-overlay"><a href="alfredo-gsap/index.html" target="_blank">View Live Demo</a></div>
+      </div>
+      <div class="template-info">
+        <div class="template-name">GSAP Premium</div>
+        <div class="template-desc">Professional scroll-driven animations powered by GSAP (GreenSock). Horizontal review scrolling, driving car scene, parallax text, counter animations.</div>
+        <div class="template-tags"><span class="tag">GSAP</span><span class="tag">Premium</span><span class="tag">Scroll-Driven</span></div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- Features -->
+<section class="features-section">
+  <div class="section-header">
+    <div class="section-tag">What You Get</div>
+    <h2 class="section-title">Every Website <span>Includes</span></h2>
+  </div>
+  <div class="features-grid">
+    <div class="feature">
+      <div class="feature-icon">📱</div>
+      <h3>Mobile-First Design</h3>
+      <p>Looks perfect on phones, tablets, and desktops. Sticky call and directions buttons on mobile.</p>
+    </div>
+    <div class="feature">
+      <div class="feature-icon">🔍</div>
+      <h3>SEO Built In</h3>
+      <p>Schema.org structured data, meta tags, FAQ markup, and local SEO so Google knows your business.</p>
+    </div>
+    <div class="feature">
+      <div class="feature-icon">⚡</div>
+      <h3>Lightning Fast</h3>
+      <p>No bloated frameworks. Pure HTML loads instantly. Google PageSpeed score of 95-100.</p>
+    </div>
+    <div class="feature">
+      <div class="feature-icon">📞</div>
+      <h3>Click-to-Call</h3>
+      <p>Big, obvious call and directions buttons. Your customers tap once to reach you.</p>
+    </div>
+    <div class="feature">
+      <div class="feature-icon">🌐</div>
+      <h3>Se Habla Espanol</h3>
+      <p>Bilingual support built into every site. Reach more customers in your community.</p>
+    </div>
+    <div class="feature">
+      <div class="feature-icon">💰</div>
+      <h3>Free Hosting</h3>
+      <p>Hosted on Cloudflare Pages for free. The only cost is the domain name at about $10.50/year.</p>
+    </div>
+  </div>
+</section>
+
+<!-- Pricing -->
+<section class="pricing-section">
+  <div class="section-header">
+    <div class="section-tag">Simple Pricing</div>
+    <h2 class="section-title">No Surprises. <span>No Hidden Fees.</span></h2>
+  </div>
+  <div class="pricing-grid">
+    <div class="price-card">
+      <div class="price-label">Starter</div>
+      <div class="price-amount">$199</div>
+      <div class="price-period">one-time setup fee</div>
+      <ul class="price-features">
+        <li>Professional single-page website</li>
+        <li>Mobile-responsive design</li>
+        <li>Click-to-call and directions</li>
+        <li>Google reviews section</li>
+        <li>SEO structured data</li>
+        <li>Free hosting on Cloudflare</li>
+      </ul>
+    </div>
+    <div class="price-card featured">
+      <div class="price-label">Professional</div>
+      <div class="price-amount">$499</div>
+      <div class="price-period">one-time setup fee</div>
+      <ul class="price-features">
+        <li>Everything in Starter</li>
+        <li>Custom .com domain name</li>
+        <li>Google Business Profile link</li>
+        <li>Google Search Console setup</li>
+        <li>FAQ section with schema markup</li>
+        <li>Free SSL certificate</li>
+      </ul>
+    </div>
+    <div class="price-card">
+      <div class="price-label">Premium</div>
+      <div class="price-amount">$1,000+</div>
+      <div class="price-period">starting price</div>
+      <ul class="price-features">
+        <li>Everything in Professional</li>
+        <li>GSAP scroll animations</li>
+        <li>Custom photography</li>
+        <li>Multi-page website</li>
+        <li>Monthly updates and maintenance</li>
+        <li>Google Ads setup and management</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+  <h2>Ready for a<br/><span>Real Website?</span></h2>
+  <p>Your competitors already have one. Let's build yours today.</p>
+  <a href="mailto:pdc@osipovdigital.com" class="cta-btn">
+    Get Started
+  </a>
+</section>
+
+<footer>
+  <p>Osipov Digital | Cleveland, TN | pdc@osipovdigital.com</p>
+</footer>
+
+</body>
+</html>
