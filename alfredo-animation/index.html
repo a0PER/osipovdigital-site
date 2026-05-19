@@ -724,11 +724,19 @@ const carObs=new IntersectionObserver((entries)=>{
 },{threshold:0.3});
 carObs.observe(carSection);
 
+// ── SECTION TAG REVEAL (must be before observer) ──
+document.querySelectorAll('.section-tag,.section-title').forEach(el=>{
+  if(!el.classList.contains('scroll-reveal')) el.classList.add('scroll-reveal');
+});
+
 // ── SCROLL REVEAL (generic) ──
+let revealIndex=0;
 const revealObs=new IntersectionObserver((entries)=>{
-  entries.forEach((e,i)=>{
+  entries.forEach((e)=>{
     if(e.isIntersecting){
-      setTimeout(()=>e.target.classList.add('visible'),i*80);
+      setTimeout(()=>e.target.classList.add('visible'),revealIndex*80);
+      revealIndex++;
+      revealObs.unobserve(e.target);
     }
   });
 },{threshold:0.1});
@@ -765,8 +773,7 @@ const today=new Date().getDay();
 const todayRow=document.querySelector(`.hours-row[data-day="${today}"]`);
 if(todayRow && !todayRow.classList.contains('closed')) todayRow.classList.add('today');
 
-// ── SECTION TAG REVEAL ──
-document.querySelectorAll('.section-tag,.section-title').forEach(el=>el.classList.add('scroll-reveal'));
+// section-tag reveal moved above observer
 </script>
 </body>
 </html>
