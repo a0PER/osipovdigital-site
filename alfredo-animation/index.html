@@ -714,6 +714,7 @@ window.addEventListener('scroll',()=>{
 const carSection=document.getElementById('carSection');
 const carSvg=document.getElementById('carSvg');
 let carTriggered=false;
+if(carSection && carSvg){
 const carObs=new IntersectionObserver((entries)=>{
   entries.forEach(e=>{
     if(e.isIntersecting && !carTriggered){
@@ -723,6 +724,7 @@ const carObs=new IntersectionObserver((entries)=>{
   });
 },{threshold:0.3});
 carObs.observe(carSection);
+}
 
 // ── SECTION TAG REVEAL (must be before observer) ──
 document.querySelectorAll('.section-tag,.section-title').forEach(el=>{
@@ -740,7 +742,7 @@ const revealObs=new IntersectionObserver((entries)=>{
     }
   });
 },{threshold:0.1});
-document.querySelectorAll('.scroll-reveal,.svc-card,.review-card,.stat-item,.hours-row,.contact-item,.map-wrap').forEach(el=>revealObs.observe(el));
+document.querySelectorAll('.scroll-reveal,.svc-card,.review-card,.stat-item,.hours-row,.contact-item,.map-wrap').forEach(el=>{if(el instanceof Element) revealObs.observe(el);});
 
 // ── COUNTER ANIMATION ──
 function animateCounter(el){
