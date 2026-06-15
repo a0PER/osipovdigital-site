@@ -1,0 +1,103 @@
+Web Design for Local Businesses
+Professional Websites
+Affordable Prices
+Modern, mobile-first websites for local businesses. Fast loading, SEO-ready, and built to make your phone ring. Se habla espanol.
+
+$199
+Starting At
+4
+Design Styles
+100
+Google PageSpeed
+24hr
+Turnaround
+Choose Your Style
+Website Templates
+
+View Live Demo
+Classic Dark
+Bold black and red with clean typography. Professional and no-nonsense. Perfect for auto shops, contractors, and service businesses.
+Dark Theme
+Mobile-First
+SEO Ready
+
+View All 4 Styles
+4-Style Sampler
+Bold Industrial, Clean Modern, Warm Approachable, and High Energy. Four complete hero designs in one page so you can pick your vibe.
+4 Styles
+Animated Icons
+Comparison
+
+View Live Demo
+Scroll Animations
+CSS-powered scroll animations, floating particles, rolling tire, counter effects, and card reveals. Eye-catching without external libraries.
+Animated
+Scroll Effects
+Particles
+
+View Live Demo
+GSAP Premium
+Professional scroll-driven animations powered by GSAP (GreenSock). Horizontal review scrolling, driving car scene, parallax text, counter animations.
+GSAP
+Premium
+Scroll-Driven
+What You Get
+Every Website Includes
+
+Mobile-First Design
+Looks perfect on phones, tablets, and desktops. Sticky call and directions buttons on mobile.
+
+
+SEO Built In
+Schema.org structured data, meta tags, FAQ markup, and local SEO so Google knows your business.
+
+
+Lightning Fast
+No bloated frameworks. Pure HTML loads instantly. Google PageSpeed score of 95-100.
+
+
+Click-to-Call
+Big, obvious call and directions buttons. Your customers tap once to reach you.
+
+
+Se Habla Espanol
+Bilingual support built into every site. Reach more customers in your community.
+
+
+Free Hosting
+Hosted on Cloudflare Pages for free. The only cost is the domain name at about $10.50/year.
+
+Simple Pricing
+No Surprises. No Hidden Fees.
+Starter
+$199
+one-time setup fee
+Professional single-page website
+Mobile-responsive design
+Click-to-call and directions
+Google reviews section
+SEO structured data
+Free hosting on Cloudflare
+Professional
+$499
+one-time setup fee
+Everything in Starter
+Custom .com domain name
+Google Business Profile link
+Google Search Console setup
+FAQ section with schema markup
+Free SSL certificate
+Premium
+$1,000+
+starting price
+Everything in Professional
+GSAP scroll animations
+Custom photography
+Multi-page website
+Monthly updates and maintenance
+Google Ads setup and management
+Ready for a
+Real Website?
+Your competitors already have one. Let's build yours today.
+
+Get Started
